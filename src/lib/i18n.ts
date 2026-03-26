@@ -114,6 +114,8 @@ const dict = {
   'hint.history': { ja: '記事を開いて読んだ履歴。「スクロールで自動既読」で流れたものは含まず、実際に開いた記事だけが残ります。', en: 'Articles you actually opened and read. Items swept away by "Auto-Mark As Read On Scroll" aren\'t included — only articles you tapped into.' },
   'articles.showOlder': { ja: 'もっと読む（${count}件）', en: 'Show older articles (${count})' },
   'articles.allCaughtUp': { ja: '全部読んだよ！', en: "You're all caught up!" },
+  'inbox.markAllRead': { ja: 'すべて既読にする', en: 'Mark all as read' },
+  'inbox.markAllRead.confirm': { ja: '未読記事をすべて既読にしますか？', en: 'Mark all unread articles as read?' },
 
   // ArticleDetail
   'article.noContent': { ja: 'コンテンツがありません', en: 'No content available' },

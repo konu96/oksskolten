@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 import { useSWRConfig } from 'swr'
-import { Search, X, Loader2 } from 'lucide-react'
+import { Search, X, Loader2, CheckCheck } from 'lucide-react'
 import { fetcher } from '../../lib/fetcher'
 import { authHeaders } from '../../lib/api-base'
 import { markSeenOnServer } from '../../lib/markSeenWithQueue'
@@ -24,7 +24,7 @@ import { FeedErrorBanner } from '../feed/feed-error-banner'
 import { Skeleton } from '../ui/skeleton'
 import { useKeyboardNavigationContext } from '../../contexts/keyboard-navigation-context'
 import { useKeyboardNavigation } from '../../hooks/use-keyboard-navigation'
-import { apiPatch } from '../../lib/fetcher'
+import { apiPatch, apiPost } from '../../lib/fetcher'
 import type { ArticleListItem, FeedWithCounts } from '../../../shared/types'
 import type { LayoutName } from '../../data/layouts'
 
@@ -591,6 +591,27 @@ export const ArticleList = forwardRef<ArticleListHandle, object>(function Articl
             className="text-accent text-sm hover:underline"
           >
             {t('articles.showOlder', { count: String(hiddenByFloor) })}
+          </button>
+        </div>
+      )}
+
+      {/* Inbox: mark all as read button at the bottom */}
+      {isInbox && !hasMore && displayedArticles.length > 0 && !isLoading && (
+        <div className="text-center py-6 border-t border-border mt-2">
+          <button
+            onClick={() => {
+              if (!confirm(t('inbox.markAllRead.confirm'))) return
+              apiPost('/api/articles/mark-all-seen')
+                .then(() => {
+                  void mutate()
+                  void globalMutate((key: string) => typeof key === 'string' && key.startsWith('/api/feeds'))
+                })
+                .catch(() => toast.error(t('articles.loadError')))
+            }}
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-muted hover:text-text border border-border rounded-lg hover:bg-bg-subtle transition-colors"
+          >
+            <CheckCheck size={14} strokeWidth={1.5} />
+            {t('inbox.markAllRead')}
           </button>
         </div>
       )}
