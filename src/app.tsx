@@ -17,6 +17,7 @@ import { PageLayout } from './components/layout/page-layout'
 const SettingsPage = lazy(() => import('./pages/settings-page').then(m => ({ default: m.SettingsPage })))
 const ChatPage = lazy(() => import('./pages/chat-page').then(m => ({ default: m.ChatPage })))
 const HomePage = lazy(() => import('./pages/home-page').then(m => ({ default: m.HomePage })))
+const AnalyticsPage = lazy(() => import('./pages/analytics-page').then(m => ({ default: m.AnalyticsPage })))
 import { AuthShell } from './lib/auth-shell'
 import { ErrorBoundary } from './components/auth/error-boundary'
 import { HintBanner } from './components/ui/hint-banner'
@@ -211,6 +212,16 @@ function HomePageWrapper() {
   )
 }
 
+function AnalyticsPageWrapper() {
+  return (
+    <PageLayout>
+      <Suspense>
+        <AnalyticsPage />
+      </Suspense>
+    </PageLayout>
+  )
+}
+
 function ArticleDetailPage() {
   const { '*': splat } = useParams()
 
@@ -233,7 +244,7 @@ function ArticleDetailPage() {
 
 // Determine the "page type" for animation decisions
 function getPageType(pathname: string): 'detail' | 'list' {
-  if (pathname === '/' || pathname === '/inbox' || pathname === '/bookmarks' || pathname === '/likes' || pathname === '/history' || pathname === '/clips' || pathname.startsWith('/feeds/') || pathname.startsWith('/categories/') || pathname.startsWith('/settings') || pathname.startsWith('/chat')) {
+  if (pathname === '/' || pathname === '/inbox' || pathname === '/bookmarks' || pathname === '/likes' || pathname === '/history' || pathname === '/clips' || pathname === '/analytics' || pathname.startsWith('/feeds/') || pathname.startsWith('/categories/') || pathname.startsWith('/settings') || pathname.startsWith('/chat')) {
     return 'list'
   }
   return 'detail'
@@ -314,6 +325,7 @@ function AnimatedRoutes() {
             <Route path="/categories/:categoryId" element={<ArticleListPage />} />
             <Route path="/settings" element={<Navigate to="/settings/general" replace />} />
             <Route path="/settings/:tab" element={<SettingsPageWrapper />} />
+            <Route path="/analytics" element={<AnalyticsPageWrapper />} />
             <Route path="/chat" element={<ChatPageWrapper />} />
             <Route path="/chat/:conversationId" element={<ChatPageWrapper />} />
             <Route path="/*" element={<ArticleDetailPage />} />

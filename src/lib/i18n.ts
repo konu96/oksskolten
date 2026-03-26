@@ -808,6 +808,24 @@ const dict = {
   'about.commit': { ja: 'コミット', en: 'Commit' },
   'about.buildDate': { ja: 'ビルド日時', en: 'Build Date' },
 
+  // Analytics
+  'analytics.title': { ja: 'アナリティクス', en: 'Analytics' },
+  'analytics.period.1w': { ja: '1週間', en: '1W' },
+  'analytics.period.2w': { ja: '2週間', en: '2W' },
+  'analytics.period.1m': { ja: '1ヶ月', en: '1M' },
+  'analytics.period.3m': { ja: '3ヶ月', en: '3M' },
+  'analytics.period.all': { ja: '全期間', en: 'All' },
+  'analytics.totalArticles': { ja: '総記事数', en: 'Total Articles' },
+  'analytics.readArticles': { ja: '読んだ記事', en: 'Read' },
+  'analytics.bookmarked': { ja: 'ブックマーク', en: 'Bookmarked' },
+  'analytics.liked': { ja: 'いいね', en: 'Liked' },
+  'analytics.dailyReads': { ja: '日別既読数', en: 'Daily Reads' },
+  'analytics.feedRanking': { ja: 'フィード別', en: 'By Feed' },
+  'analytics.categoryBreakdown': { ja: 'カテゴリ別', en: 'By Category' },
+  'analytics.articles': { ja: '${count}件', en: '${count} articles' },
+  'analytics.noData': { ja: 'データがありません', en: 'No data for this period' },
+  'analytics.uncategorized': { ja: '未分類', en: 'Uncategorized' },
+
   // Toast
   'toast.fetchedArticles': { ja: '${name}: ${count}件の新しい記事を取得', en: '${name}: Fetched ${count} new articles' },
   'toast.noNewArticles': { ja: '${name}: 新着なし', en: '${name}: No new articles' },

@@ -10,3 +10,4 @@ export { createApiKey, listApiKeys, deleteApiKey, validateApiKey } from './apiKe
 export type { ApiKey, ApiKeyCreated } from './apiKeys.js'
 export { insertSimilarity, getSimilarArticles, findReadSimilarArticle } from './similarities.js'
 export type { SimilarArticle } from './similarities.js'
+export { periodToSince, getAnalyticsSummary, getDailyReads, getFeedRanking, getCategoryDistribution } from './analytics.js'
