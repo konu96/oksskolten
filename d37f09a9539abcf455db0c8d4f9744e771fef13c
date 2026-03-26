@@ -1,0 +1,47 @@
+CLAUDE.md
+  8c1b095ee56a3564 1,3-7,11-47,49-80,88-104
+server/db/index.ts
+  8c1b095ee56a3564 13
+server/routes/analytics.ts
+  8c1b095ee56a3564 1-24
+server/db/analytics.ts
+  8c1b095ee56a3564 1-156
+src/components/analytics/daily-reads-chart.tsx
+  8c1b095ee56a3564 1-59
+src/hooks/use-chart-colors.ts
+  8c1b095ee56a3564 1-77
+src/components/analytics/feed-ranking-chart.tsx
+  8c1b095ee56a3564 1-63
+src/components/analytics/category-chart.tsx
+  8c1b095ee56a3564 1-69
+src/pages/analytics-page.tsx
+  8c1b095ee56a3564 1-144
+src/app.tsx
+  8c1b095ee56a3564 20,215-224,247,328
+src/components/feed/feed-list.tsx
+  8c1b095ee56a3564 7,74,493-494
+server/routes/index.ts
+  8c1b095ee56a3564 10,24
+src/lib/i18n.ts
+  8c1b095ee56a3564 786-803
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "d37f09a9539abcf455db0c8d4f9744e771fef13c",
+  "prompts": {
+    "8c1b095ee56a3564": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a32f3852-64ce-45d7-899b-1493254c82cc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 798,
+      "total_deletions": 77,
+      "accepted_lines": 724,
+      "overriden_lines": 0
+    }
+  }
+}
