@@ -1,0 +1,31 @@
+src/components/article/article-list.tsx
+  97df027f0bfa0e0e 6,27,596-616
+server/db/articles.ts
+  97df027f0bfa0e0e 261-271
+src/lib/i18n.ts
+  97df027f0bfa0e0e 117-118
+server/db/index.ts
+  97df027f0bfa0e0e 4
+server/routes/articles.ts
+  97df027f0bfa0e0e 14,442-446
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "5766f5cb1337c52be6146f1a303e2099bf43b96a",
+  "prompts": {
+    "97df027f0bfa0e0e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "26309083-764b-4d34-b354-75032760faf2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 43,
+      "total_deletions": 3,
+      "accepted_lines": 43,
+      "overriden_lines": 0
+    }
+  }
+}
