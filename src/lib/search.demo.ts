@@ -10,7 +10,7 @@ interface SearchResult {
 
 export async function searchArticles(
   q: string,
-  filters: { bookmarked: boolean; liked: boolean; unread: boolean; since?: string },
+  filters: { bookmarked: boolean; liked: boolean; unread: boolean; read?: boolean; since?: string },
   limit: number,
   _offset: number,
   _signal?: AbortSignal,
@@ -20,6 +20,7 @@ export async function searchArticles(
     bookmarked: filters.bookmarked || undefined,
     liked: filters.liked || undefined,
     unread: filters.unread || undefined,
+    read: filters.read || undefined,
     since: filters.since,
     limit,
   })

@@ -72,6 +72,7 @@ const SearchQuery = z.object({
   feed_id: coerceOptionalNumber,
   category_id: coerceOptionalNumber,
   unread: z.string().optional(),
+  read: z.string().optional(),
   liked: z.string().optional(),
   bookmarked: z.string().optional(),
   since: z.string().optional(),
@@ -252,6 +253,7 @@ export async function articleRoutes(api: FastifyInstance): Promise<void> {
     const limit = Math.min(Math.max(query.limit || DEFAULT_ARTICLE_LIMIT, 1), MAX_SEARCH_LIMIT)
     const offset = Math.max(query.offset || 0, 0)
     const unread = query.unread === '1' ? true : query.unread === '0' ? false : undefined
+    const read = query.read === '1'
     const liked = query.liked === '1'
     const bookmarked = query.bookmarked === '1'
 
@@ -262,6 +264,7 @@ export async function articleRoutes(api: FastifyInstance): Promise<void> {
         since: query.since,
         until: query.until,
         unread,
+        read,
         liked,
         bookmarked,
       })

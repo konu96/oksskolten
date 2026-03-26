@@ -22,6 +22,7 @@ function buildMeiliDoc(id: number): MeiliArticleDoc | null {
            COALESCE(CAST(strftime('%s', published_at) AS INTEGER), 0) AS published_at,
            COALESCE(score, 0) AS score,
            (seen_at IS NULL) AS is_unread,
+           (read_at IS NOT NULL) AS is_read,
            (liked_at IS NOT NULL) AS is_liked,
            (bookmarked_at IS NOT NULL) AS is_bookmarked
     FROM articles WHERE id = ?
@@ -333,7 +334,7 @@ export function recordArticleRead(
     return getDb().prepare('SELECT seen_at, read_at FROM articles WHERE id = ?').get(id) as { seen_at: string | null; read_at: string | null } | undefined
   })()
   syncScoreToSearch(id)
-  syncArticleFiltersToSearch([{ id, is_unread: false }])
+  syncArticleFiltersToSearch([{ id, is_unread: false, is_read: true }])
   return row ? { seen_at: row.seen_at, read_at: row.read_at } : undefined
 }
 

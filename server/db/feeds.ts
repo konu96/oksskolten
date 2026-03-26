@@ -148,6 +148,7 @@ export function updateFeed(
              COALESCE(CAST(strftime('%s', published_at) AS INTEGER), 0) AS published_at,
              COALESCE(score, 0) AS score,
              (seen_at IS NULL) AS is_unread,
+             (read_at IS NOT NULL) AS is_read,
              (liked_at IS NOT NULL) AS is_liked,
              (bookmarked_at IS NOT NULL) AS is_bookmarked
       FROM active_articles WHERE feed_id = ?
@@ -175,6 +176,7 @@ export function bulkMoveFeedsToCategory(feedIds: number[], categoryId: number | 
            COALESCE(CAST(strftime('%s', published_at) AS INTEGER), 0) AS published_at,
            COALESCE(score, 0) AS score,
            (seen_at IS NULL) AS is_unread,
+           (read_at IS NOT NULL) AS is_read,
            (liked_at IS NOT NULL) AS is_liked,
            (bookmarked_at IS NOT NULL) AS is_bookmarked
     FROM active_articles WHERE feed_id IN (${placeholders})

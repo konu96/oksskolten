@@ -800,6 +800,11 @@ const dict = {
   'search.period.week': { ja: '1週間', en: 'Week' },
   'search.period.month': { ja: '1ヶ月', en: 'Month' },
 
+  // History search
+  'history.search.placeholder': { ja: '読んだ記事を検索...', en: 'Search read articles...' },
+  'history.search.noResults': { ja: '一致する記事がありません', en: 'No matching articles' },
+  'history.search.indexBuilding': { ja: '検索インデックスを構築中です…', en: 'Building search index…' },
+
   // About
   'settings.about': { ja: 'About', en: 'About' },
   'about.version': { ja: 'バージョン', en: 'Version' },

@@ -3,7 +3,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 import { useSWRConfig } from 'swr'
+import { Search, X, Loader2 } from 'lucide-react'
 import { fetcher } from '../../lib/fetcher'
+import { authHeaders } from '../../lib/api-base'
 import { markSeenOnServer } from '../../lib/markSeenWithQueue'
 import { useI18n } from '../../lib/i18n'
 import { trackRead } from '../../lib/readTracker'
@@ -69,6 +71,14 @@ export const ArticleList = forwardRef<ArticleListHandle, object>(function Articl
   const readOnly = isHistory
   const { autoMarkRead, dateMode, indicatorStyle, layout, articleOpenMode, keyboardNavigation, keybindings } = settings
   const [overlayUrl, setOverlayUrl] = useState<string | null>(null)
+
+  // History search
+  const [historyQuery, setHistoryQuery] = useState('')
+  const [historySearchResults, setHistorySearchResults] = useState<ArticleListItem[]>([])
+  const [historySearching, setHistorySearching] = useState(false)
+  const [historyHasSearched, setHistoryHasSearched] = useState(false)
+  const historyDebounceRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const historyAbortRef = useRef<AbortController>(undefined)
   const [noFloor, setNoFloor] = useState(false)
   const displayConfig: ArticleDisplayConfig = useMemo(() => ({
     dateMode,
@@ -377,6 +387,51 @@ export const ArticleList = forwardRef<ArticleListHandle, object>(function Articl
     setFocusedItemId(null)
   }, [feedId, categoryId, setFocusedItemId])
 
+  // History search: debounced Meilisearch query with read=true filter
+  useEffect(() => {
+    if (!isHistory) return
+    clearTimeout(historyDebounceRef.current)
+    if (!historyQuery.trim()) {
+      setHistorySearchResults([])
+      setHistoryHasSearched(false)
+      setHistorySearching(false)
+      return
+    }
+    setHistorySearching(true)
+    historyDebounceRef.current = setTimeout(async () => {
+      historyAbortRef.current?.abort()
+      const controller = new AbortController()
+      historyAbortRef.current = controller
+      try {
+        const params = new URLSearchParams({ q: historyQuery, read: '1', limit: '50' })
+        const res = await fetch(`/api/articles/search?${params}`, {
+          headers: authHeaders(),
+          signal: controller.signal,
+        })
+        if (controller.signal.aborted) return
+        if (res.ok) {
+          const json = await res.json() as { articles: ArticleListItem[]; has_more: boolean }
+          setHistorySearchResults(json.articles)
+        } else {
+          setHistorySearchResults([])
+        }
+        setHistoryHasSearched(true)
+        setHistorySearching(false)
+      } catch {
+        // aborted
+        setHistorySearching(false)
+      }
+    }, 300)
+    return () => {
+      clearTimeout(historyDebounceRef.current)
+      historyAbortRef.current?.abort()
+    }
+  }, [historyQuery, isHistory])
+
+  // Displayed articles: use search results when searching in history
+  const isHistorySearchActive = isHistory && historyQuery.trim().length > 0
+  const displayedArticles = isHistorySearchActive ? historySearchResults : articles
+
   return (
     <main ref={listRef} className="max-w-2xl mx-auto" role={!isGridLayout ? 'listbox' : undefined}>
       {isTouchDevice && <PullToRefresh onRefresh={async () => {
@@ -391,11 +446,37 @@ export const ArticleList = forwardRef<ArticleListHandle, object>(function Articl
         }
       }} />}
 
+      {isHistory && (
+        <div className="px-4 md:px-6 py-3 border-b border-border">
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+            <input
+              type="text"
+              value={historyQuery}
+              onChange={e => setHistoryQuery(e.target.value)}
+              placeholder={t('history.search.placeholder')}
+              className="w-full pl-9 pr-8 py-2 text-sm bg-bg-subtle border border-border rounded-lg text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+            />
+            {historyQuery && !historySearching && (
+              <button
+                onClick={() => { setHistoryQuery(''); setHistorySearchResults([]); setHistoryHasSearched(false) }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-text transition-colors"
+              >
+                <X size={14} strokeWidth={1.5} />
+              </button>
+            )}
+            {historySearching && (
+              <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted animate-spin" />
+            )}
+          </div>
+        </div>
+      )}
+
       {currentFeed && currentFeed.type !== 'clip' && settings.showFeedActivity === 'on' && (
         <FeedMetricsBar feed={currentFeed} />
       )}
 
-      {isLoading && <ArticleListSkeleton layout={layout} showThumbnails={displayConfig.showThumbnails} />}
+      {isLoading && !isHistorySearchActive && <ArticleListSkeleton layout={layout} showThumbnails={displayConfig.showThumbnails} />}
 
       {error && (
         <div className="text-center py-12">
@@ -447,8 +528,12 @@ export const ArticleList = forwardRef<ArticleListHandle, object>(function Articl
         )
       )}
 
+      {isHistorySearchActive && historyHasSearched && historySearchResults.length === 0 && !historySearching && (
+        <p className="text-muted text-center py-12">{t('history.search.noResults')}</p>
+      )}
+
       <div className={isGridLayout ? 'grid grid-cols-1 md:grid-cols-2 gap-4 px-4 md:px-6' : ''}>
-        {articles.map((article, index) => {
+        {displayedArticles.map((article, index) => {
           const isAutoRead = autoReadIds.has(article.id)
           const effectiveArticle = isAutoRead
             ? { ...article, seen_at: article.seen_at ?? new Date().toISOString() }
@@ -493,13 +578,13 @@ export const ArticleList = forwardRef<ArticleListHandle, object>(function Articl
         })}
       </div>
 
-      {hasMore && (
+      {hasMore && !isHistorySearchActive && (
         <div ref={sentinelCallbackRef} className="py-4">
           {isValidating && <ArticleListSkeleton layout={layout} count={2} showThumbnails={displayConfig.showThumbnails} />}
         </div>
       )}
 
-      {!hasMore && hiddenByFloor > 0 && (
+      {!hasMore && hiddenByFloor > 0 && !isHistorySearchActive && (
         <div className="text-center py-6">
           <button
             onClick={() => setNoFloor(true)}
