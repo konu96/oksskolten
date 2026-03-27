@@ -1,0 +1,33 @@
+server/db/articles.ts
+  327cc3f412b1c913 8,12-17,198-199,209,213,215-216,224-225,229,231-232,240-241,380,507,509-510,518
+server/fetcher/rss.test.ts
+  327cc3f412b1c913 522-548
+migrations/0008_decode_html_entities_in_titles.sql
+  327cc3f412b1c913 1-15
+server/db/feeds.ts
+  327cc3f412b1c913 5,77,100
+server/fetcher/rss.ts
+  327cc3f412b1c913 4,254,382,393,396
+server/lib/html-entities.ts
+  327cc3f412b1c913 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.20",
+  "base_commit_sha": "b76eb97dd9bdea7aee2cd15683207fa902b7d698",
+  "prompts": {
+    "327cc3f412b1c913": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c5021c96-41f5-42e1-831e-dd6d57852d99",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 109,
+      "total_deletions": 44,
+      "accepted_lines": 88,
+      "overriden_lines": 0
+    }
+  }
+}
