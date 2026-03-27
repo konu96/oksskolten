@@ -1,0 +1,29 @@
+src/components/chat/chat-fab.tsx
+  2e49292a484502fd 9,12,35-39
+src/components/article/article-detail.tsx
+  2e49292a484502fd 1,29,46-47,277-278
+src/components/article/article-copy-link-fab.tsx
+  2e49292a484502fd 1-45
+src/lib/i18n.ts
+  2e49292a484502fd 150-151
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "6f8e67ab56a3ef2804b1c4c39a45b9044ee090ae",
+  "prompts": {
+    "2e49292a484502fd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6f6ca693-d551-4b2b-a5c7-fe1c09c62908",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 66,
+      "total_deletions": 9,
+      "accepted_lines": 60,
+      "overriden_lines": 0
+    }
+  }
+}
