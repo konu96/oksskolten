@@ -519,6 +519,33 @@ describe('fetchAndParseRss', () => {
     expect(items[0].url).not.toContain('utm_')
   })
 
+  it('decodes HTML entities in titles', async () => {
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Dev Blog</title>
+    <item>
+      <title>M&amp;amp;A によるナレッジワーク</title>
+      <link>https://example.com/post-1</link>
+    </item>
+    <item>
+      <title>Foo &amp;lt;Bar&amp;gt; &amp;quot;Baz&amp;quot;</title>
+      <link>https://example.com/post-2</link>
+    </item>
+  </channel>
+</rss>`
+    mockSafeFetch.mockResolvedValue(mockResponse(xml))
+
+    const { items } = await fetchAndParseRss({
+      id: 1, name: 'test', url: 'https://example.com',
+      rss_url: 'https://example.com/rss',
+    } as any)
+
+    expect(items).toHaveLength(2)
+    expect(items[0].title).toBe('M&A によるナレッジワーク')
+    expect(items[1].title).toBe('Foo <Bar> "Baz"')
+  })
+
   it('filters out items without a URL', async () => {
     const xml = `<?xml version="1.0"?>
 <rss version="2.0">

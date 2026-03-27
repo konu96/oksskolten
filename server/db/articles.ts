@@ -5,12 +5,19 @@ import { syncArticleToSearch, deleteArticleFromSearch, deleteArticlesFromSearch,
 import { RETRY_MAX_ATTEMPTS, RETRY_BATCH_LIMIT } from '../fetcher/util.js'
 import { deleteArticleImages } from '../fetcher/article-images.js'
 import { logger } from '../logger.js'
+import { decodeHtmlEntities } from '../lib/html-entities.js'
 
 const log = logger.child('retention')
 
 /** Normalize a URL so that raw-Unicode and percent-encoded forms compare equal. */
 function normalizeUrl(raw: string): string {
   try { return new URL(raw).href } catch { return raw }
+}
+
+/** Decode HTML entities in article title (safety net for legacy data) */
+function decodeTitle<T extends { title: string }>(row: T): T {
+  if (row.title.includes('&')) row.title = decodeHtmlEntities(row.title)
+  return row
 }
 
 function buildMeiliDoc(id: number): MeiliArticleDoc | null {
@@ -193,7 +200,8 @@ export function getArticles(opts: {
 
   const articles = allNamed<ArticleListItem>(`
     SELECT a.id, a.feed_id, f.name AS feed_name,
-           a.title, a.url, a.published_at, a.lang, a.summary, a.excerpt, a.og_image, a.seen_at, a.read_at, a.bookmarked_at, a.liked_at,
+           a.title,
+           a.url, a.published_at, a.lang, a.summary, a.excerpt, a.og_image, a.seen_at, a.read_at, a.bookmarked_at, a.liked_at,
            a.score,
            (SELECT COUNT(*) FROM article_similarities WHERE article_id = a.id) AS similar_count
     FROM active_articles a
@@ -203,13 +211,14 @@ export function getArticles(opts: {
     LIMIT @_limit OFFSET @_offset
   `, { ...params, _limit: Number(opts.limit), _offset: Number(opts.offset) })
 
-  return { articles, total, ...(totalWithoutFloor != null && totalWithoutFloor > total ? { totalWithoutFloor } : {}) }
+  return { articles: articles.map(decodeTitle), total, ...(totalWithoutFloor != null && totalWithoutFloor > total ? { totalWithoutFloor } : {}) }
 }
 
 export function getArticleByUrl(url: string): ArticleDetail | undefined {
-  return getDb().prepare(`
+  const row = getDb().prepare(`
     SELECT a.id, a.feed_id, f.name AS feed_name, f.type AS feed_type,
-           a.title, a.url, a.published_at, a.lang, a.summary, a.excerpt, a.og_image,
+           a.title,
+           a.url, a.published_at, a.lang, a.summary, a.excerpt, a.og_image,
            a.full_text, a.full_text_translated, a.translated_lang, a.seen_at, a.read_at, a.bookmarked_at, a.liked_at,
            a.images_archived_at,
            (SELECT COUNT(*) FROM article_similarities WHERE article_id = a.id) AS similar_count
@@ -217,12 +226,15 @@ export function getArticleByUrl(url: string): ArticleDetail | undefined {
     JOIN feeds f ON a.feed_id = f.id
     WHERE a.url = ?
   `).get(normalizeUrl(url)) as ArticleDetail | undefined
+  if (row) decodeTitle(row)
+  return row
 }
 
 export function getArticleById(id: number): ArticleDetail | undefined {
-  return getDb().prepare(`
+  const row = getDb().prepare(`
     SELECT a.id, a.feed_id, f.name AS feed_name, f.type AS feed_type,
-           a.title, a.url, a.published_at, a.lang, a.summary, a.excerpt, a.og_image,
+           a.title,
+           a.url, a.published_at, a.lang, a.summary, a.excerpt, a.og_image,
            a.full_text, a.full_text_translated, a.translated_lang, a.seen_at, a.read_at, a.bookmarked_at, a.liked_at,
            a.images_archived_at,
            (SELECT COUNT(*) FROM article_similarities WHERE article_id = a.id) AS similar_count
@@ -230,6 +242,8 @@ export function getArticleById(id: number): ArticleDetail | undefined {
     JOIN feeds f ON a.feed_id = f.id
     WHERE a.id = ?
   `).get(id) as ArticleDetail | undefined
+  if (row) decodeTitle(row)
+  return row
 }
 
 export function markArticleSeen(
@@ -368,7 +382,7 @@ export function insertArticle(data: {
     VALUES (@feed_id, (SELECT category_id FROM feeds WHERE id = @feed_id), @title, @url, @published_at, @lang, @full_text, @full_text_translated, @translated_lang, @summary, @excerpt, @og_image, @last_error)
   `, {
     feed_id: data.feed_id,
-    title: data.title,
+    title: decodeHtmlEntities(data.title),
     url: data.url,
     published_at: data.published_at,
     lang: data.lang ?? null,
@@ -496,9 +510,10 @@ export function getArticlesByIds(
   const where = 'WHERE ' + conditions.join(' AND ')
   const score = scoreExpr('a.')
 
-  return getDb().prepare(`
+  const rows = getDb().prepare(`
     SELECT a.id, a.feed_id, f.name AS feed_name,
-           a.title, a.url, a.published_at, a.lang, a.summary, a.excerpt,
+           a.title,
+           a.url, a.published_at, a.lang, a.summary, a.excerpt,
            a.og_image, a.seen_at, a.read_at, a.bookmarked_at, a.liked_at,
            ${score} AS score
     FROM active_articles a
@@ -506,6 +521,7 @@ export function getArticlesByIds(
     ${where}
     ORDER BY CASE a.id ${orderCase} END
   `).all(...ids) as ArticleListItem[]
+  return rows.map(decodeTitle)
 }
 
 // --- Search queries ---
