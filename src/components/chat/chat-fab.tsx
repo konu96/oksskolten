@@ -6,9 +6,10 @@ import { fetcher } from '../../lib/fetcher'
 
 interface ChatFabProps {
   articleId: number
+  onPanelChange?: (open: boolean) => void
 }
 
-export function ChatFab({ articleId }: ChatFabProps) {
+export function ChatFab({ articleId, onPanelChange }: ChatFabProps) {
   const [panelOpen, setPanelOpen] = useState(false)
   // Track whether panel has ever been opened — mount ChatPanel only after first open,
   // then keep it alive (hidden) so useChat state is preserved.
@@ -30,6 +31,11 @@ export function ChatFab({ articleId }: ChatFabProps) {
       setMounted(true)
     }
   }, [hasConversations])
+
+  // Notify parent of panel state changes
+  useEffect(() => {
+    onPanelChange?.(panelOpen)
+  }, [panelOpen, onPanelChange])
 
   // Close panel when viewport shrinks below md breakpoint
   useEffect(() => {

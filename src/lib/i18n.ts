@@ -147,6 +147,8 @@ const dict = {
   'article.removeLike': { ja: 'いいねを解除', en: 'Unlike' },
   'article.delete': { ja: '削除', en: 'Delete' },
   'article.deleteConfirm': { ja: 'この記事を削除しますか？', en: 'Delete this article?' },
+  'article.copyLink': { ja: 'リンクをコピー', en: 'Copy link' },
+  'article.linkCopied': { ja: 'コピーしました', en: 'Copied!' },
 
   // AddModal (unified)
   'modal.addNew': { ja: 'はじめる', en: 'Get Started' },
