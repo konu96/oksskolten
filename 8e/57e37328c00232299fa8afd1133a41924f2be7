@@ -1,0 +1,48 @@
+server/fetcher/rss.test.ts
+  327cc3f412b1c913 522-548
+server/fetcher/rss.ts
+  327cc3f412b1c913 4,254,382,393,396
+server/lib/html-entities.ts
+  327cc3f412b1c913 1-13
+migrations/0008_decode_html_entities_in_titles.sql
+  327cc3f412b1c913 1-15
+server/db/articles.ts
+  327cc3f412b1c913 8,12-22,203-204,214,218,220-221,229-230,234,236-237,245-246,385,513,515-516,524
+  97df027f0bfa0e0e 32,280-290,362
+server/db/feeds.ts
+  327cc3f412b1c913 5,77,100
+  97df027f0bfa0e0e 152,180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "8e57e37328c00232299fa8afd1133a41924f2be7",
+  "prompts": {
+    "327cc3f412b1c913": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c5021c96-41f5-42e1-831e-dd6d57852d99",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 109,
+      "total_deletions": 44,
+      "accepted_lines": 93,
+      "overriden_lines": 0
+    },
+    "97df027f0bfa0e0e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "26309083-764b-4d34-b354-75032760faf2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 43,
+      "total_deletions": 3,
+      "accepted_lines": 15,
+      "overriden_lines": 0
+    }
+  }
+}
