@@ -114,6 +114,8 @@ const dict = {
   'hint.history': { ja: '記事を開いて読んだ履歴。「スクロールで自動既読」で流れたものは含まず、実際に開いた記事だけが残ります。', en: 'Articles you actually opened and read. Items swept away by "Auto-Mark As Read On Scroll" aren\'t included — only articles you tapped into.' },
   'articles.showOlder': { ja: 'もっと読む（${count}件）', en: 'Show older articles (${count})' },
   'articles.allCaughtUp': { ja: '全部読んだよ！', en: "You're all caught up!" },
+  'inbox.markAllRead': { ja: 'すべて既読にする', en: 'Mark all as read' },
+  'inbox.markAllRead.confirm': { ja: '未読記事をすべて既読にしますか？', en: 'Mark all unread articles as read?' },
 
   // ArticleDetail
   'article.noContent': { ja: 'コンテンツがありません', en: 'No content available' },
@@ -145,6 +147,8 @@ const dict = {
   'article.removeLike': { ja: 'いいねを解除', en: 'Unlike' },
   'article.delete': { ja: '削除', en: 'Delete' },
   'article.deleteConfirm': { ja: 'この記事を削除しますか？', en: 'Delete this article?' },
+  'article.copyLink': { ja: 'リンクをコピー', en: 'Copy link' },
+  'article.linkCopied': { ja: 'コピーしました', en: 'Copied!' },
 
   // AddModal (unified)
   'modal.addNew': { ja: 'はじめる', en: 'Get Started' },
@@ -800,6 +804,11 @@ const dict = {
   'search.period.week': { ja: '1週間', en: 'Week' },
   'search.period.month': { ja: '1ヶ月', en: 'Month' },
 
+  // History search
+  'history.search.placeholder': { ja: '読んだ記事を検索...', en: 'Search read articles...' },
+  'history.search.noResults': { ja: '一致する記事がありません', en: 'No matching articles' },
+  'history.search.indexBuilding': { ja: '検索インデックスを構築中です…', en: 'Building search index…' },
+
   // About
   'settings.about': { ja: 'About', en: 'About' },
   'about.version': { ja: 'バージョン', en: 'Version' },
@@ -807,6 +816,24 @@ const dict = {
   'about.issues': { ja: 'フィードバック', en: 'Feedback' },
   'about.commit': { ja: 'コミット', en: 'Commit' },
   'about.buildDate': { ja: 'ビルド日時', en: 'Build Date' },
+
+  // Analytics
+  'analytics.title': { ja: 'アナリティクス', en: 'Analytics' },
+  'analytics.period.1w': { ja: '1週間', en: '1W' },
+  'analytics.period.2w': { ja: '2週間', en: '2W' },
+  'analytics.period.1m': { ja: '1ヶ月', en: '1M' },
+  'analytics.period.3m': { ja: '3ヶ月', en: '3M' },
+  'analytics.period.all': { ja: '全期間', en: 'All' },
+  'analytics.totalArticles': { ja: '総記事数', en: 'Total Articles' },
+  'analytics.readArticles': { ja: '読んだ記事', en: 'Read' },
+  'analytics.bookmarked': { ja: 'ブックマーク', en: 'Bookmarked' },
+  'analytics.liked': { ja: 'いいね', en: 'Liked' },
+  'analytics.dailyReads': { ja: '日別既読数', en: 'Daily Reads' },
+  'analytics.feedRanking': { ja: 'フィード別', en: 'By Feed' },
+  'analytics.categoryBreakdown': { ja: 'カテゴリ別', en: 'By Category' },
+  'analytics.articles': { ja: '${count}件', en: '${count} articles' },
+  'analytics.noData': { ja: 'データがありません', en: 'No data for this period' },
+  'analytics.uncategorized': { ja: '未分類', en: 'Uncategorized' },
 
   // Toast
   'toast.fetchedArticles': { ja: '${name}: ${count}件の新しい記事を取得', en: '${name}: Fetched ${count} new articles' },

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { JSDOM } from 'jsdom'
 import type { Feed } from '../db.js'
+import { decodeHtmlEntities } from '../lib/html-entities.js'
 import { normalizeDate } from './util.js'
 import { fetchHtml, decodeResponse, USER_AGENT, DEFAULT_TIMEOUT, DISCOVERY_TIMEOUT, PROBE_TIMEOUT } from './http.js'
 import { safeFetch } from './ssrf.js'
@@ -60,14 +61,6 @@ function throwIfRateLimited(res: Response): void {
 
 const RSS_BRIDGE_URL = process.env.RSS_BRIDGE_URL
 
-/**
- * Decode HTML entities in a string.
- */
-function decodeHtmlEntities(s: string): string {
-  return s
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
-}
 
 /**
  * Extract usable RSS/Atom XML from a FlareSolverr response body.
@@ -258,7 +251,7 @@ const RSS_BRIDGE_ERROR_RE = /^Bridge returned error/i
 function cleanItems(items: RssItem[]): RssItem[] {
   return items
     .filter(item => !RSS_BRIDGE_ERROR_RE.test(item.title))
-    .map(item => ({ ...item, url: cleanUrl(item.url) }))
+    .map(item => ({ ...item, title: decodeHtmlEntities(item.title), url: cleanUrl(item.url) }))
 }
 
 async function parseRssXml(xml: string): Promise<RssItem[]> {
@@ -386,7 +379,7 @@ async function fetchFeedTitle(rssUrl: string): Promise<string | null> {
       const parsed = parseFeed(xml) as Record<string, unknown>
       const feed = parsed.feed as Record<string, unknown> | undefined
       const title = parsed.title ?? feed?.title
-      if (title && typeof title === 'string') return title
+      if (title && typeof title === 'string') return decodeHtmlEntities(title)
     } catch {
       // feedsmith failed, fall through
     }
@@ -397,10 +390,10 @@ async function fetchFeedTitle(rssUrl: string): Promise<string | null> {
     const doc = parser.parse(xml)
 
     const rssTitle = doc?.rss?.channel?.title
-    if (rssTitle && typeof rssTitle === 'string') return rssTitle
+    if (rssTitle && typeof rssTitle === 'string') return decodeHtmlEntities(rssTitle)
 
     const atomTitle = doc?.feed?.title
-    if (atomTitle && typeof atomTitle === 'string') return atomTitle
+    if (atomTitle && typeof atomTitle === 'string') return decodeHtmlEntities(atomTitle)
 
     return null
   } catch {

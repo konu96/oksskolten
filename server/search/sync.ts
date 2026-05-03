@@ -31,7 +31,7 @@ let changeLog: ChangeEntry[] | null = null
 
 const INDEX_SETTINGS = {
   searchableAttributes: ['title', 'full_text', 'full_text_translated'],
-  filterableAttributes: ['feed_id', 'category_id', 'lang', 'published_at', 'is_unread', 'is_liked', 'is_bookmarked'],
+  filterableAttributes: ['feed_id', 'category_id', 'lang', 'published_at', 'is_unread', 'is_read', 'is_liked', 'is_bookmarked'],
   sortableAttributes: ['published_at', 'score'],
   rankingRules: ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
 }
@@ -75,6 +75,7 @@ export async function rebuildSearchIndex(): Promise<void> {
              COALESCE(CAST(strftime('%s', published_at) AS INTEGER), 0) AS published_at,
              COALESCE(score, 0) AS score,
              (seen_at IS NULL) AS is_unread,
+             (read_at IS NOT NULL) AS is_read,
              (liked_at IS NOT NULL) AS is_liked,
              (bookmarked_at IS NOT NULL) AS is_bookmarked
       FROM active_articles
@@ -84,6 +85,7 @@ export async function rebuildSearchIndex(): Promise<void> {
     const docs = rows.map((row) => ({
       ...row,
       is_unread: Boolean(row.is_unread),
+      is_read: Boolean(row.is_read),
       is_liked: Boolean(row.is_liked),
       is_bookmarked: Boolean(row.is_bookmarked),
     }))
@@ -181,7 +183,7 @@ export function syncArticleScoreToSearch(id: number, score: number): void {
   }
 }
 
-export function syncArticleFiltersToSearch(updates: { id: number; is_unread?: boolean; is_liked?: boolean; is_bookmarked?: boolean }[]): void {
+export function syncArticleFiltersToSearch(updates: { id: number; is_unread?: boolean; is_read?: boolean; is_liked?: boolean; is_bookmarked?: boolean }[]): void {
   if (updates.length === 0) return
   try {
     const client = getSearchClient()

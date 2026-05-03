@@ -26,6 +26,7 @@ export interface MeiliArticleDoc {
   published_at: number // Unix timestamp (seconds) for numeric filtering
   score: number
   is_unread: boolean
+  is_read: boolean
   is_liked: boolean
   is_bookmarked: boolean
 }
@@ -39,6 +40,7 @@ export function buildMeiliFilter(opts: {
   since?: string
   until?: string
   unread?: boolean
+  read?: boolean
   liked?: boolean
   bookmarked?: boolean
 }): string | undefined {
@@ -48,6 +50,7 @@ export function buildMeiliFilter(opts: {
   if (opts.since) parts.push(`published_at >= ${Math.floor(new Date(opts.since).getTime() / 1000)}`)
   if (opts.until) parts.push(`published_at <= ${Math.floor(new Date(opts.until).getTime() / 1000)}`)
   if (opts.unread !== undefined) parts.push(`is_unread = ${opts.unread}`)
+  if (opts.read) parts.push('is_read = true')
   if (opts.liked) parts.push('is_liked = true')
   if (opts.bookmarked) parts.push('is_bookmarked = true')
   return parts.length > 0 ? parts.join(' AND ') : undefined

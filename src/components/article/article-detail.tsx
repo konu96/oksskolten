@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import useSWR from 'swr'
 import { renderMarkdown } from '../../lib/markdown'
@@ -26,6 +26,7 @@ import { ArticleSummarySection } from './article-summary-section'
 import { ArticleTranslationBanner } from './article-translation-banner'
 import { ArticleContentBody } from './article-content-body'
 import { ArticleSimilarBanner } from './article-similar-banner'
+import { ArticleCopyLinkFab } from './article-copy-link-fab'
 import type { ArticleDetail as ArticleDetailData } from '../../../shared/types'
 
 interface ArticleDetailProps {
@@ -42,6 +43,8 @@ export function ArticleDetail({ articleUrl }: ArticleDetailProps) {
 
   const isUserLang = article?.lang === (translateTargetLang || locale)
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
+  const [chatPanelOpen, setChatPanelOpen] = useState(false)
+  const handleChatPanelChange = useCallback((open: boolean) => setChatPanelOpen(open), [])
 
   const articleRef = useRef<HTMLElement>(null)
 
@@ -271,7 +274,8 @@ export function ArticleDetail({ articleUrl }: ArticleDetailProps) {
       />
       <ImageLightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
     </article>
-    {chatPosition === 'fab' && article && <ChatFab key={article.id} articleId={article.id} />}
+    <ArticleCopyLinkFab url={article.url} chatPanelOpen={chatPanelOpen} />
+    {chatPosition === 'fab' && article && <ChatFab key={article.id} articleId={article.id} onPanelChange={handleChatPanelChange} />}
     {deleteConfirmOpen && (
       <ConfirmDialog
         title={t('article.delete')}

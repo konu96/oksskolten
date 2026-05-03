@@ -2,6 +2,7 @@ import { getDb, runNamed } from './connection.js'
 import type { Feed, FeedWithCounts } from './types.js'
 import type { MeiliArticleDoc } from '../search/client.js'
 import { deleteArticlesFromSearch, syncArticlesByFeedToSearch } from '../search/sync.js'
+import { decodeHtmlEntities } from '../lib/html-entities.js'
 
 export function getFeeds(): FeedWithCounts[] {
   return getDb().prepare(`
@@ -73,7 +74,7 @@ export function createFeed(data: {
     INSERT INTO feeds (name, url, rss_url, rss_bridge_url, category_id, requires_js_challenge, type)
     VALUES (@name, @url, @rss_url, @rss_bridge_url, @category_id, @requires_js_challenge, @type)
   `, {
-    name: data.name,
+    name: decodeHtmlEntities(data.name),
     url: data.url,
     rss_url: data.rss_url ?? null,
     rss_bridge_url: data.rss_bridge_url ?? null,
@@ -96,7 +97,7 @@ export function updateFeed(
 
   if (data.name !== undefined) {
     fields.push('name = @name')
-    params.name = data.name
+    params.name = decodeHtmlEntities(data.name)
   }
   if (data.rss_url !== undefined) {
     fields.push('rss_url = @rss_url')
@@ -148,6 +149,7 @@ export function updateFeed(
              COALESCE(CAST(strftime('%s', published_at) AS INTEGER), 0) AS published_at,
              COALESCE(score, 0) AS score,
              (seen_at IS NULL) AS is_unread,
+             (read_at IS NOT NULL) AS is_read,
              (liked_at IS NOT NULL) AS is_liked,
              (bookmarked_at IS NOT NULL) AS is_bookmarked
       FROM active_articles WHERE feed_id = ?
@@ -175,6 +177,7 @@ export function bulkMoveFeedsToCategory(feedIds: number[], categoryId: number | 
            COALESCE(CAST(strftime('%s', published_at) AS INTEGER), 0) AS published_at,
            COALESCE(score, 0) AS score,
            (seen_at IS NULL) AS is_unread,
+           (read_at IS NOT NULL) AS is_read,
            (liked_at IS NOT NULL) AS is_liked,
            (bookmarked_at IS NOT NULL) AS is_bookmarked
     FROM active_articles WHERE feed_id IN (${placeholders})

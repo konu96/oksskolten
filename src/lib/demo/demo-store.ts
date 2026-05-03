@@ -449,6 +449,7 @@ export const demoStore = {
     bookmarked?: boolean
     liked?: boolean
     unread?: boolean
+    read?: boolean
     since?: string
     limit?: number
   }) {
@@ -464,6 +465,7 @@ export const demoStore = {
     if (params.bookmarked) result = result.filter(a => a.bookmarked_at != null)
     if (params.liked) result = result.filter(a => a.liked_at != null)
     if (params.unread) result = result.filter(a => a.seen_at == null)
+    if (params.read) result = result.filter(a => a.read_at != null)
     if (params.since) {
       const since = new Date(params.since).getTime()
       result = result.filter(a => a.published_at && new Date(a.published_at).getTime() >= since)
