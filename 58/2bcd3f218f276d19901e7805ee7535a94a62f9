@@ -1,0 +1,46 @@
+server/routes/articles.ts
+  97df027f0bfa0e0e 14,76,257,268,442-446
+src/lib/i18n.ts
+  8c1b095ee56a3564 818-835
+  97df027f0bfa0e0e 117-118,805-809
+server/db/articles.ts
+  97df027f0bfa0e0e 11-15,25,266-276,348
+src/components/article/article-list.tsx
+  97df027f0bfa0e0e 6,8,27,74-81,390-434,449-474,479,531-534,536,581,587,598-618
+server/db/index.ts
+  8c1b095ee56a3564 13
+  97df027f0bfa0e0e 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "582bcd3f218f276d19901e7805ee7535a94a62f9",
+  "prompts": {
+    "8c1b095ee56a3564": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a32f3852-64ce-45d7-899b-1493254c82cc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 798,
+      "total_deletions": 77,
+      "accepted_lines": 19,
+      "overriden_lines": 0
+    },
+    "97df027f0bfa0e0e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "26309083-764b-4d34-b354-75032760faf2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 43,
+      "total_deletions": 3,
+      "accepted_lines": 146,
+      "overriden_lines": 0
+    }
+  }
+}
