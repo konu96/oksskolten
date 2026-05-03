@@ -1,0 +1,55 @@
+server/search/client.ts
+  97df027f0bfa0e0e 29,43,53
+src/lib/demo/demo-store.ts
+  97df027f0bfa0e0e 452,468
+src/components/article/article-list.tsx
+  97df027f0bfa0e0e 6,8,74-81,390-434,449-474,479,531-534,536,581,587
+src/lib/i18n.ts
+  97df027f0bfa0e0e 803-807
+  8c1b095ee56a3564 816-833
+src/lib/search.demo.ts
+  97df027f0bfa0e0e 13,23
+src/lib/search.ts
+  97df027f0bfa0e0e 13,23
+server/db/articles.ts
+  97df027f0bfa0e0e 25,337
+server/db/feeds.ts
+  97df027f0bfa0e0e 151,179
+server/search/sync.ts
+  97df027f0bfa0e0e 34,78,88,186
+server/routes/articles.ts
+  97df027f0bfa0e0e 75,256,267
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "95166f3294a0692175c59628b9e8bbfc93d1769a",
+  "prompts": {
+    "8c1b095ee56a3564": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a32f3852-64ce-45d7-899b-1493254c82cc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 798,
+      "total_deletions": 77,
+      "accepted_lines": 18,
+      "overriden_lines": 0
+    },
+    "97df027f0bfa0e0e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "26309083-764b-4d34-b354-75032760faf2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "konu96 <ukouhei96@gmail.com>",
+      "messages": [],
+      "total_additions": 43,
+      "total_deletions": 3,
+      "accepted_lines": 114,
+      "overriden_lines": 0
+    }
+  }
+}
